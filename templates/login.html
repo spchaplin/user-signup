@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="post">
+    <label>Username:
+        <input type="text" name="username">
+    </label>
+    <p class="error">{{username_error}}</p>
+    <label>Password:
+        <input type="password" name="password">
+    </label>
+    <p class="error">{{pw1_error}}</p>
+    <label>Password:
+        <input type="password" name="re_enter_password" placeholder=" re-enter to verify">
+    </label>
+    <p class="error">{{pw2_error}}</p>
+    <p class="error">{{pw_match_error}}</p>
+    <label>Email:
+        <input type="text" name="email">
+    </label>
+    <input type="submit" value="Login">
+</form>
+{% endblock %}
