@@ -11,17 +11,34 @@ def index():
     page_title = "User Signup"
     username = request.args.get("username")
     email = request.args.get("email")
-    empty_field_error = request.args.get("empty_field_error")
-    pw_error = request.args.get("pw_error")
+    username_format_error = request.args.get("username_format_error")
+    pw1_format_error = request.args.get("pw1_format_error")
+    pw2_format_error = request.args.get("pw2_format_error")
+    pw_match_error = request.args.get("pw_match_error")
+    email_format_error = request.args.get("email_format_error")
+
     if not username:
         username = ""
     if not email:
         email = ""
-    if not empty_field_error:
-         empty_field_error = ""
-    if not pw_error:
-         pw_error = ""
-    return render_template('login.html', page_title=page_title, empty_field_error=empty_field_error, username=username, email=email, pw_error=pw_error)
+    
+    if not username_format_error:
+        username_format_error = ""
+    else:
+        username = ""
+
+    if not email_format_error:
+        email_format_error = ""
+    else:
+        email = ""
+    
+    if not pw1_format_error:
+        pw1_format_error = ""
+    if not pw2_format_error:
+        pw2_format_error = ""
+    if not pw_match_error:
+        pw_match_error = ""
+    return render_template('login.html', page_title=page_title, username=username, email=email, username_format_error=username_format_error, pw1_format_error=pw1_format_error, pw2_format_error=pw2_format_error, pw_match_error=pw_match_error, email_format_error=email_format_error)
 
 @app.route("/welcome")
 def welcome():
@@ -40,26 +57,44 @@ def validate():
     pw2 = request.form['re_enter_password']
     email = request.form['email']
 
-    #test for empty fields
-    if username == "" or pw1 == "" or pw2 == "":
+    #test for valid username
+    if " " in username or len(username) < 3 or len(username) >20:
         is_valid_form = False
-        empty_field_error = "field(s) were left blank"
+        username_format_error = "Usernames must be 3 to 20 characters, and cannot include spaces."
     else:
-        empty_field_error = ""
-    #test password format and matching
-    if " " in pw1 or pw1 != pw2 or len(pw1) < 3 or len(pw1) >20 or len(pw2) < 3 or len(pw2) > 20:
-        pw_error = "Passwords must be 3 to 20 characters, cannot include spaces, and must match."
-        is_valid_form = False
-    else:
-        pw_error = ""
+        username_format_error = ""
 
+    #test pw1 format
+    if " " in pw1 or len(pw1) < 3 or len(pw1) >20:
+        is_valid_form = False
+        pw1_format_error = "Passwords must be 3 to 20 characters, and cannot include spaces."
+    else:
+        pw1_format_error = ""
+     #test pw2 format
+    if " " in pw2 or len(pw2) < 3 or len(pw2) >20:
+        is_valid_form = False
+        pw2_format_error = "Passwords must be 3 to 20 characters, and cannot include spaces."
+    else:
+        pw2_format_error = ""
+     #test pw match format
+    if pw1 != pw2:
+        is_valid_form = False
+        pw_match_error = "Passwords must match."
+    else:
+        pw_match_error = ""
+
+    #test for valid email
+    if len(email) > 0 and (email.count(" ") != 0 or email.count("@") != 1 or email.count(".") != 1 or len(email) < 3 or len(email) > 20):
+        is_valid_form = False
+        email_format_error = 'If provided, email must have one "@", one ".", no spaces, and be 3 to 20 characters long.'
+    else:
+        email_format_error = ""
 
     if is_valid_form:
         #get request
         return redirect("/welcome?username={0}".format(username))     
     else:
         #get request
-        return redirect("/?empty_field_error={empty}&username={user}&email={email}&pw_error={pw_error}".format(empty=empty_field_error, user=username, email=email, pw_error=pw_error))
-    
+        return redirect("/?username={username}&email={email}&username_format_error={username_format_error}&pw1_format_error={pw1_format_error}&pw2_format_error={pw2_format_error}&pw_match_error={pw_match_error}&email_format_error={email_format_error}".format(username=username, email=email, username_format_error=username_format_error, pw1_format_error=pw1_format_error, pw2_format_error=pw2_format_error, pw_match_error=pw_match_error, email_format_error=email_format_error))
     
 app.run()

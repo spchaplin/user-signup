@@ -2,34 +2,59 @@
 {% block content %}
 <form method="post">
     <label>Username:
-        <input type="text" name="username" value="{{username}}"><span class="asterisk"> *</span>
+        <input type="text" class="text-input username" name="username" value="{{username}}"><span class="asterisk"> *</span>
     </label>
-    <p class="error">{{username_error}}</p>
-    <div class="password-area">
-        <label>Password:
-            <input type="password" name="password"><span class="asterisk"> *</span>
-        </label>
-        <label class="verify">Verify Password:
-            <input type="password" name="re_enter_password"><span class="asterisk"> *</span>
-        </label>
-        <p class="error">{{pw_error}}</p>
-        {% if pw_error|length > 0 %}
-        <style>
-        .password-area {
-            background-color: #ffff99;
-            border-radius: 5px;
-            max-width: 400px;
-            border: 1px dotted black;
-            padding: 10px 10px 0;
+    <p class="error">{{username_format_error}}</p>
+    {% if username_format_error|length > 0 %}
+    <style>
+        .username {
+            background:#ffff80;
         }
         </style>
-        {% endif %}
-    </div>
+    {% endif %}
+    <label>Password:
+        <input class="text-input pw1" type="password" name="password"><span class="asterisk"> *</span>
+    </label>
+    <p class="error">{{pw1_format_error}}</p>
+    <label class="verify">Verify Password:
+        <input class="text-input pw2" type="password" name="re_enter_password"><span class="asterisk"> *</span>
+    </label>
+    <p class="error">{{pw2_format_error}}</p>
+    <p class="error">{{pw_match_error}}</p>
+    {% if pw_match_error|length > 0 %}
+    <style>
+        .pw1, .pw2 {
+            background:#ffff80;
+        }
+        </style>
+    {% endif %}
+    {% if pw1_format_error|length > 0 %}
+    <style>
+        .pw1 {
+                    background:#ffff80;
+            }
+        </style>
+    {% endif %}
+    {% if pw2_format_error|length > 0 %}
+    <style>
+        .pw2 {
+                    background:#ffff80;
+            }
+        </style>
+    {% endif %}
     <p class="error">{{empty_field_error}}</p>
     <label>Email:
-        <input type="text" name="email" value="{{email}}">
+        <input class="text-input email" type="text" name="email" value="{{email}}">
+        <p class="error">{{email_format_error}}</p>
+        {% if email_format_error|length > 0 %}
+        <style>
+            .email {
+                    background:#ffff80;
+            }
+        </style>
+        {% endif %}
     </label>
-    <input type="submit" value="Login">
+    <input class="button" type="submit" value="Login">
 </form>
 
 {% endblock %}
